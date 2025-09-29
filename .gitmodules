@@ -1,0 +1,3 @@
+[submodule "core_model"]
+	path = core_model
+	url = https://github.com/LuisH019/rpg_mobile.git
