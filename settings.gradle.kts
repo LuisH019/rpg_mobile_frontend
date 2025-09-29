@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "rpg_mobile_frontend"
 include(":app")
+include(":core_model")
