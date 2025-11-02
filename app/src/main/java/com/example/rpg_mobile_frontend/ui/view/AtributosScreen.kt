@@ -1,4 +1,4 @@
-// Arquivo: AtributosScreen.kt
+// Arquivo: ui/view/AtributosScreen.kt
 package com.example.rpg_mobile_frontend.ui.view
 
 import androidx.compose.foundation.layout.*
@@ -11,7 +11,7 @@ import com.example.rpg_mobile_frontend.controller.PersonagemCreationController
 import com.example.rpg_mobile_frontend.ui.components.AtributoAssignment
 
 @Composable
-fun AtributosScreen(controller: PersonagemCreationController) {
+fun AtributosScreen(controller: PersonagemCreationController, onNext: () -> Unit, onPrevious: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -20,7 +20,6 @@ fun AtributosScreen(controller: PersonagemCreationController) {
         if (controller.selectedAtributoDistribution == null) {
             Text("Escolha o Estilo de Distribuição de Atributos:")
             Spacer(Modifier.height(16.dp))
-
             Button(onClick = { controller.selectAtributoDistribution("Clássico") }) {
                 Text("Estilo Clássico")
             }
@@ -31,13 +30,13 @@ fun AtributosScreen(controller: PersonagemCreationController) {
                 Text("Estilo Aventureiro")
             }
         } else {
-            AtributosDisplay(controller)
+            AtributosDisplay(controller, onNext, onPrevious)
         }
     }
 }
 
 @Composable
-fun AtributosDisplay(controller: PersonagemCreationController) {
+fun AtributosDisplay(controller: PersonagemCreationController, onNext: () -> Unit, onPrevious: () -> Unit) {
     Column {
         Text("Distribuição de Atributos: ${controller.selectedAtributoDistribution}")
         Spacer(Modifier.height(16.dp))
@@ -46,8 +45,25 @@ fun AtributosDisplay(controller: PersonagemCreationController) {
             controller.selectedAtributos.forEach { (nome, valor) ->
                 Text("$nome: $valor")
             }
+            Spacer(Modifier.height(16.dp))
+            Button(onClick = onPrevious) {
+                Text("Voltar")
+            }
+            Button(onClick = {
+                controller.salvarPersonagem()
+                onNext()
+            }) {
+                Text("Avançar para o Resumo")
+            }
         } else {
-            AtributoAssignment(controller)
+            AtributoAssignment(
+                controller = controller,
+                onNext = {
+                    controller.salvarPersonagem()
+                    onNext()
+                },
+                onPrevious = onPrevious
+            )
         }
     }
 }

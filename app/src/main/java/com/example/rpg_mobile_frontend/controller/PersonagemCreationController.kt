@@ -1,6 +1,8 @@
+// Arquivo: PersonagemCreationController.kt
 package com.example.rpg_mobile_frontend.controller
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import classes.Classe
@@ -20,6 +22,7 @@ import racas.Humano
 import racas.Raca
 import rpg.dados.somar
 import personagem.Estilos
+import personagem.Personagem
 
 class PersonagemCreationController {
 
@@ -36,6 +39,13 @@ class PersonagemCreationController {
         private set
 
     var generatedAttributeValues by mutableStateOf<List<Int>>(emptyList())
+        private set
+
+    // Lista de personagens salvos
+    val savedCharacters = mutableStateListOf<Personagem>()
+
+    // Variável para o personagem que será exibido no resumo
+    var personagemFinal by mutableStateOf<Personagem?>(null)
         private set
 
     val racas: List<Raca> = listOf(Anao(), Elfo(), Halfling(), Humano())
@@ -73,5 +83,23 @@ class PersonagemCreationController {
 
     fun assignAttributes(assignments: Map<String, Int>) {
         selectedAtributos = assignments
+    }
+
+    fun salvarPersonagem() {
+        if (selectedRaca != null && selectedClasse != null && selectedAtributos.isNotEmpty()) {
+            val personagem = Personagem(selectedRaca!!, selectedClasse!!)
+            personagem.atributos.putAll(selectedAtributos)
+            savedCharacters.add(personagem)
+            personagemFinal = personagem
+        }
+    }
+
+    // Adiciona a nova função para resetar o estado
+    fun resetState() {
+        selectedRaca = null
+        selectedClasse = null
+        selectedAtributos = emptyMap()
+        selectedAtributoDistribution = null
+        generatedAttributeValues = emptyList()
     }
 }

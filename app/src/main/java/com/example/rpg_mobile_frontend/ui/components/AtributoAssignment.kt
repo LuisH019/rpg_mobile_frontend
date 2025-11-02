@@ -1,4 +1,4 @@
-// Arquivo: AtributoAssignment.kt
+// Arquivo: ui/components/AtributoAssignment.kt
 package com.example.rpg_mobile_frontend.ui.components
 
 import androidx.compose.foundation.layout.*
@@ -15,7 +15,7 @@ import com.example.rpg_mobile_frontend.controller.PersonagemCreationController
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun AtributoAssignment(controller: PersonagemCreationController) {
+fun AtributoAssignment(controller: PersonagemCreationController, onNext: () -> Unit, onPrevious: () -> Unit) {
     val atributosNomes = listOf("forca", "destreza", "constituicao", "inteligencia", "sabedoria", "carisma")
 
     val assignedAttributes = remember {
@@ -64,12 +64,10 @@ fun AtributoAssignment(controller: PersonagemCreationController) {
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Coluna 1: Nome do Atributo
                     Column(modifier = Modifier.weight(1f)) {
                         Text("$atributo: ${assignedAttributes[atributo]?.toString() ?: "Nenhum"}")
                     }
 
-                    // Coluna 2: Botões de Atribuição
                     Column(modifier = Modifier.weight(1f)) {
                         if (assignedAttributes[atributo] == null) {
                             FlowRow(
@@ -81,7 +79,7 @@ fun AtributoAssignment(controller: PersonagemCreationController) {
                                             assignedAttributes[atributo] = valor
                                             unassignedValues.remove(valor)
                                         },
-                                        modifier = Modifier.size(80.dp, 40.dp).padding(4.dp)
+                                        modifier = Modifier.size(80.dp, 40.dp)
                                     ) {
                                         Text(valor.toString())
                                     }
@@ -104,11 +102,17 @@ fun AtributoAssignment(controller: PersonagemCreationController) {
                 onClick = {
                     val finalAssignment = assignedAttributes.mapValues { it.value!! }
                     controller.assignAttributes(finalAssignment)
+                    onNext()
                 },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text("Confirmar Atribuição")
             }
+        }
+
+        Spacer(Modifier.height(16.dp))
+        Button(onClick = onPrevious) {
+            Text("Voltar")
         }
     }
 }

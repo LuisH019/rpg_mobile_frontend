@@ -1,3 +1,4 @@
+// Arquivo: ui/view/RacasScreen.kt
 package com.example.rpg_mobile_frontend.ui.view
 
 import androidx.compose.foundation.layout.Column

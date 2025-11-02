@@ -1,6 +1,8 @@
+// Arquivo: ui/view/ClassesScreen.kt
 package com.example.rpg_mobile_frontend.ui.view
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -11,7 +13,7 @@ import com.example.rpg_mobile_frontend.controller.PersonagemCreationController
 import classes.Classe
 
 @Composable
-fun ClassesScreen(controller: PersonagemCreationController, onNext: () -> Unit) {
+fun ClassesScreen(controller: PersonagemCreationController, onNext: () -> Unit, onPrevious: () -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Escolha a Classe:")
 
@@ -24,6 +26,13 @@ fun ClassesScreen(controller: PersonagemCreationController, onNext: () -> Unit) 
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text(classe::class.java.simpleName)
+            }
+        }
+        Row(
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
+            Button(onClick = onPrevious) {
+                Text("Voltar")
             }
         }
     }
