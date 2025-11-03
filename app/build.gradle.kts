@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+//    kotlin("kapt")
 }
 
 android {
@@ -55,6 +56,10 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
+
+//    implementation("androidx.room:room-runtime:2.5.1")
+//    implementation("androidx.room:room-ktx:2.5.1")
+//    kapt("androidx.room:room-compiler:2.5.1")
 
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)

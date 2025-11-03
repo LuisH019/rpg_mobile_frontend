@@ -1,5 +1,9 @@
-// Arquivo: PersonagemCreationController.kt
 package com.example.rpg_mobile_frontend.controller
+
+import android.content.Context
+import com.example.rpg_mobile_frontend.data.CharacterRepository
+import com.example.rpg_mobile_frontend.data.room.CharacterEntity
+
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -24,7 +28,8 @@ import rpg.dados.somar
 import personagem.Estilos
 import personagem.Personagem
 
-class PersonagemCreationController {
+class PersonagemCreationController(context: Context) {
+    private val repository = CharacterRepository(context)
 
     var selectedRaca by mutableStateOf<Raca?>(null)
         private set
@@ -51,6 +56,20 @@ class PersonagemCreationController {
     val racas: List<Raca> = listOf(Anao(), Elfo(), Halfling(), Humano())
     val classes: List<Classe> = listOf(Guerreiro(), Ladrao(), Clerigo(), Mago(), Barbaro(), Bardo(), Academico(), Ilusionista())
     private val estilos = Estilos()
+
+    init {
+        val entities = repository.getAllEntities()
+        for (e in entities) {
+            val racaObj: Raca? = racas.find { it::class.java.simpleName == e.raceName }
+            val classeObj: Classe? = classes.find { it::class.java.simpleName == e.className }
+
+            if (racaObj != null && classeObj != null) {
+                val p = Personagem(racaObj, classeObj)
+                p.atributos.putAll(e.attributes)
+                savedCharacters.add(p)
+            }
+        }
+    }
 
     fun selectRaca(raca: Raca) {
         selectedRaca = raca
@@ -89,6 +108,15 @@ class PersonagemCreationController {
         if (selectedRaca != null && selectedClasse != null && selectedAtributos.isNotEmpty()) {
             val personagem = Personagem(selectedRaca!!, selectedClasse!!)
             personagem.atributos.putAll(selectedAtributos)
+            // salva no repositório (DB)
+            val entity = CharacterEntity(
+                raceName = personagem.raca::class.java.simpleName,
+                className = personagem.classe::class.java.simpleName,
+                attributes = personagem.atributos
+            )
+            repository.insertEntity(entity)
+
+            // Mantém lista em memória (UI)
             savedCharacters.add(personagem)
             personagemFinal = personagem
         }
